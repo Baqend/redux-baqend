@@ -1,0 +1,21 @@
+{
+  "name": "redux-baqend",
+  "version": "1.0.0",
+  "description": "baqend middleware for redux",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "babel src --out-dir lib"
+  },
+  "author": "Julian Tiemann",
+  "license": "MIT",
+  "peerDependencies": {
+    "baqend": "^2.7.0",
+    "redux": "^3.6.0"
+  },
+  "devDependencies": {
+    "babel": "^6.23.0",
+    "babel-cli": "^6.24.1",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1"
+  }
+}
