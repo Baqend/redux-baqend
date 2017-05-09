@@ -1,5 +1,7 @@
 ## Redux Baqend Middleware
 
+!["Logo"](redux_baqend.svg)
+
 ### Installation
 ```
 $ npm install redux-baqend --save
