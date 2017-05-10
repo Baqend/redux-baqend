@@ -1,6 +1,8 @@
 import { db } from 'baqend';
 
 const resultToJSON = (res, options = {}) => {
+  if(res === undefined)
+    return null
   if(res.length) {
     return res[0]._metadata ? res.map(o => o.toJSON(options)) : res
   } else {
@@ -40,41 +42,56 @@ const createBaqendMiddleware = () => {
         } else {
           func = payload
         }
-        return func(db, ref)
-          .then(
-            (r) => {
-              let action, res;
 
-              res = resultToJSON(r, options)
+        return new Promise(function(resolve, reject) {
+          func(db, ref)
+            .then(
+              (r) => {
 
-              if(typeof SUCCESS === 'string') {
-                action = {
-                  type: SUCCESS,
-                  payload: res
+                let action;
+                let res = resultToJSON(r, options)
+                if(typeof SUCCESS === 'string') {
+                  action = {
+                    type: SUCCESS,
+                    payload: res
+                  }
+                } else {
+                  const { type, payload, ...rest } = SUCCESS;
+                  action = {
+                    type: type,
+                    payload: (payload && payload(res)) || res,
+                    ...rest
+                  }
                 }
-              } else {
-                const { type, payload, ...rest } = SUCCESS;
-                action = {
-                  type: type,
-                  payload: (payload && payload(res)) || res,
-                  ...rest
+                next(action);
+
+                resolve(r);
+              },
+              (err) => {
+
+                if(FAILURE) {
+                  let action;
+                  if(typeof FAILURE === 'string') {
+                    action = {
+                      type: FAILURE,
+                      payload: err
+                    }
+                  } else {
+                    const { type, payload, ...rest } = FAILURE;
+                    action = {
+                      type: type,
+                      payload: (payload && payload(err)) || err,
+                      ...rest
+                    }
+                  }
+                  next(action);
                 }
+
+                reject(err);
               }
+            )
+        })
 
-              next(action);
-
-              return r;
-            },
-            (err) => {
-
-              next({
-                type: (FAILURE.type && FAILURE.type) || FAILURE,
-                error: (FAILURE.payload && FAILURE.payload(err)) || err
-              });
-
-              return err;
-            }
-          )
       })
     }
 
