@@ -39,6 +39,15 @@ store.connect('app-starter');
 
 ```
 
+On calling this method two actions are dispatched from within the connect enhancer. The `BAQEND_CONNECTING` and `BAQEND_CONNECTED` actions. When the connection was successfull and the user is still logged it comes with the current user object, which you can use for auto login your user to your react app.
+
+```js
+...
+case BAQEND_CONNECTED:
+  return { ...state, user: action.user, isLoggedIn: !!action.user }
+...
+```
+
 ### Basic usage
 In React/Redux you should mostly work with serializable objects. Therefore you should convert the baqend objects to json before you pass them to your redux store and get and update your reference to the baqend object by using the `fromJSON` method coming with the js-sdk. You can either convert the objects manually or let the middleware do it automatically. Inside the payload methods of your actions you can work with baqend like you used to do.
 
@@ -173,3 +182,26 @@ export function itemLoad(params) {
   }
 }
 ```
+
+## How Baqend fits your Backend requirements
+
+Baqend is a fully managed Backend-as-a-Service platform with a strong focus on performance and scalability
+([click here for details](http://blog.baqend.com/post/139788321880/bringing-web-performance-to-the-next-level-an)).
+The [JavaScript API](http://www.baqend.com/js-sdk/latest/baqend.html) gives you access to common backend features
+while the [dashboard](http://www.baqend.com/guide/#baqend-dashboard) lets you define data models and access rules as
+well as business logic to execute on the server side.
+
+Baqend's feature set includes:
+
+* Automated Browser and CDN Caching
+* Scalable Data Storage
+* Realtime Streaming Queries
+* Powerful Search and Query Language
+* Push Notifications
+* User Authentication and OAuth
+* File Storage and Hosting
+* Access Control on Object and Schema Level
+
+#License
+
+[MIT](https://github.com/Baqend/react-redux-starter/blob/master/LICENSE)
