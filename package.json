@@ -1,6 +1,6 @@
 {
   "name": "redux-baqend",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "baqend middleware for redux",
   "main": "lib/index.js",
   "files": [
@@ -12,7 +12,11 @@
     "release": "node scripts/release",
     "test": "babel-node test/index.js | tap-spec"
   },
-  "author": "Julian Tiemann",
+  "author": {
+    "name": "Baqend.com",
+    "email": "info@baqend.com"
+  },
+  "homepage": "http://baqend.com",
   "license": "MIT",
   "peerDependencies": {
     "baqend": "^2.7.0",

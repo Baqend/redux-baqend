@@ -15,7 +15,6 @@ const getReference = (db, json, options) => {
 
 const createBaqendMiddleware = (db) => {
   return ({ dispatch, getState }) => next => action => {
-    console.log(db)
     const { BAQEND } = action;
 
     if(BAQEND) {
@@ -34,7 +33,6 @@ const createBaqendMiddleware = (db) => {
       }
 
       return db.then((db) => {
-        console.log(db)
         let ref, func;
         if (typeof payload == 'object') {
           ref = typeof payload[0] === 'object' ? getReference(db, payload[0], options) : null
