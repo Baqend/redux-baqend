@@ -10,12 +10,38 @@ To use it add the `baqendMiddleware` and the `baqendConnect` enhancer to your re
 
 #### store.js
 ```js
-import { baqendReducer, baqendMiddleware, baqendConnect } from 'redux-baqend'
+import { applyMiddleware, combineReducers } from 'redux'
+import { baqendReducer, createEnhancers } from 'redux-baqend'
 import middlewares from '../middleware'
 import reducers from '../reducers'
 
+export default function configureStore(initialState = {}) {
+  const reducer = combineReducers({
+    baqend: baqendReducer,
+    ...reducers
+  })
+  const middleware = applyMiddleware(
+    ...middlewares
+  )
+  return createStoreWithBaqend(
+    db.connect('app-starter'),
+    reducer,
+    initialState,
+    middleware
+  )
+}
+```
+
+If you want to have a little bit more control over how your store is created you can add the baqend enhacers manually to the store creation
+
+```js
+import { applyMiddleware, compose, createStore, combineReducers } from 'redux'
+import { baqendReducer, createEnhancers } from 'redux-baqend'
+import middlewares from '../middleware'
+import reducers from '../reducers'
 
 export default function configureStore(initialState = {}) {
+  const { baqendConnect, baqendMiddleware } = createEnhancers(db.connect('app-starter'))
   const reducer = combineReducers({
     baqend: baqendReducer,
     ...reducers
@@ -35,8 +61,6 @@ export default function configureStore(initialState = {}) {
 #### app.js
 ```js
 const store = configureStore();
-store.connect('app-starter');
-
 ```
 
 On calling this method two actions are dispatched from within the connect enhancer. The `BAQEND_CONNECTING` and `BAQEND_CONNECTED` actions. When the connection was successfull and the user is still logged it comes with the current user object, which you can use for auto login your user to your react app.

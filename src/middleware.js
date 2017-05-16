@@ -1,5 +1,3 @@
-import { db } from 'baqend';
-
 const resultToJSON = (res, options = {}) => {
   if(res === undefined)
     return null
@@ -15,8 +13,9 @@ const getReference = (db, json, options) => {
   return db[type] ? db[type].fromJSON(json) : null;
 }
 
-const createBaqendMiddleware = () => {
+const createBaqendMiddleware = (db) => {
   return ({ dispatch, getState }) => next => action => {
+    console.log(db)
     const { BAQEND } = action;
 
     if(BAQEND) {
@@ -34,7 +33,8 @@ const createBaqendMiddleware = () => {
         }
       }
 
-      return db.ready().then((db) => {
+      return db.then((db) => {
+        console.log(db)
         let ref, func;
         if (typeof payload == 'object') {
           ref = typeof payload[0] === 'object' ? getReference(db, payload[0], options) : null
@@ -99,6 +99,6 @@ const createBaqendMiddleware = () => {
   }
 }
 
-const baqendMiddleware = createBaqendMiddleware();
+// const baqendMiddleware = createBaqendMiddleware();
 
-export default baqendMiddleware
+export default createBaqendMiddleware
