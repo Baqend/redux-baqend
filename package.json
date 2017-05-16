@@ -5,6 +5,7 @@
   "main": "lib/index.js",
   "scripts": {
     "build": "babel src --out-dir lib",
+    "release": "node scripts/release",
     "test": "babel-node test/index.js | tap-spec"
   },
   "author": "Julian Tiemann",
