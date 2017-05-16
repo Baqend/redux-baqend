@@ -1,6 +1,6 @@
 ## Redux Baqend Middleware
 
-!["Logo"](https://vm.orestes.info/jt/redux-baqend/raw/master/redux_baqend.svg)
+!["Logo"](https://raw.githubusercontent.com/Baqend/redux-baqend/master/redux_baqend.svg)
 
 ### Installation
 ```
