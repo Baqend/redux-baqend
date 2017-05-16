@@ -1,8 +1,12 @@
 {
   "name": "redux-baqend",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "baqend middleware for redux",
   "main": "lib/index.js",
+  "files": [
+    "lib",
+    "src"
+  ],
   "scripts": {
     "build": "babel src --out-dir lib",
     "release": "node scripts/release",
