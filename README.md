@@ -8,6 +8,7 @@ $ npm install redux-baqend --save
 ```
 To use it add the `baqendMiddleware` and the `baqendConnect` enhancer to your redux store. You can add the optional `baqendReducer` as well if you like. Here is an example setup.
 
+You can find examples at our react starters: [React](https://github.com/Baqend/react-redux-starter) or [React Native](https://github.com/Baqend/react-native-starter)
 #### store.js
 ```js
 import { applyMiddleware, combineReducers } from 'redux'
