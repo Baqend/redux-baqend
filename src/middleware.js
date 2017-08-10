@@ -1,7 +1,9 @@
 const resultToJSON = (res, options = {}) => {
-  if(res === undefined)
+  if (res === undefined)
     return null
-  if(res.length) {
+  if (res.operation)
+    return { ...res, data: res.data.toJSON(options) }
+  if (res.length) {
     return res[0]._metadata ? res.map(o => o.toJSON(options)) : res
   } else {
     return res._metadata ? res.toJSON(options) : res
@@ -41,55 +43,82 @@ const createBaqendMiddleware = (db) => {
           func = payload
         }
 
-        return new Promise(function(resolve, reject) {
-          func(db, ref)
-            .then(
+        let promiseOrStream = func(db, ref)
+        if(promiseOrStream && promiseOrStream.subscribe) {
+          // handle subscription
+          return promiseOrStream
+            .subscribe(
               (r) => {
-
-                let action;
-                let res = resultToJSON(r, options)
-                if(typeof SUCCESS === 'string') {
-                  action = {
-                    type: SUCCESS,
-                    payload: res
-                  }
+                let res
+                let action
+                if (r && r.length) {
+                  res = resultToJSON(r, options)
                 } else {
-                  const { type, payload, ...rest } = SUCCESS;
-                  action = {
-                    type: type,
-                    payload: (payload && payload(res)) || res,
-                    ...rest
+                  res = {
+                    date: r.date,
+                    data: resultToJSON(r.data, options),
+                    matchType: r.matchType,
+                    operation: r.operation
                   }
                 }
+                action = {
+                  type: SUCCESS,
+                  payload: res
+                }
                 next(action);
+              }
+            )
+        } else {
+          // handle promises
+          return new Promise(function(resolve, reject) {
+            promiseOrStream
+              .then(
+                (r) => {
 
-                resolve(r);
-              },
-              (err) => {
-
-                if(FAILURE) {
                   let action;
-                  if(typeof FAILURE === 'string') {
+                  let res = resultToJSON(r, options)
+                  if(typeof SUCCESS === 'string') {
                     action = {
-                      type: FAILURE,
-                      payload: err
+                      type: SUCCESS,
+                      payload: res
                     }
                   } else {
-                    const { type, payload, ...rest } = FAILURE;
+                    const { type, payload, ...rest } = SUCCESS;
                     action = {
                       type: type,
-                      payload: (payload && payload(err)) || err,
+                      payload: (payload && payload(res)) || res,
                       ...rest
                     }
                   }
                   next(action);
+
+                  resolve(r);
+                },
+                (err) => {
+
+                  if(FAILURE) {
+                    let action;
+                    if(typeof FAILURE === 'string') {
+                      action = {
+                        type: FAILURE,
+                        payload: err
+                      }
+                    } else {
+                      const { type, payload, ...rest } = FAILURE;
+                      action = {
+                        type: type,
+                        payload: (payload && payload(err)) || err,
+                        ...rest
+                      }
+                    }
+                    next(action);
+                  }
+
+                  reject(err);
                 }
-
-                reject(err);
-              }
-            )
-        })
-
+              )
+          })
+        }
       })
     }
 
