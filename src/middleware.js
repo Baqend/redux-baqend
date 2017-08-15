@@ -51,7 +51,7 @@ const createBaqendMiddleware = (db) => {
               (r) => {
                 let res
                 let action
-                if (r && r.length) {
+                if (Array.isArray(r)) {
                   res = resultToJSON(r, options)
                 } else {
                   res = {
