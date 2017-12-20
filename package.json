@@ -7,8 +7,12 @@
     "lib",
     "src"
   ],
+  "watch": {
+    "test": "{src}/*.js"
+  },
   "scripts": {
     "build": "babel src --out-dir lib",
+    "build:watch": "nodemon --watch src -x \"npm run build\"",
     "release": "node scripts/release",
     "test": "babel-node test/index.js | tap-spec"
   },
