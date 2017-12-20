@@ -47,7 +47,6 @@ const createBaqendMiddleware = (db) => {
         if(promiseOrStream && promiseOrStream.subscribe) {
           // handle subscription
           const callback = (r) => {
-            debugger
             let res
             let action
             if (Array.isArray(r)) {
