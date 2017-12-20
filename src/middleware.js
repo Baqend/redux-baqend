@@ -46,28 +46,34 @@ const createBaqendMiddleware = (db) => {
         let promiseOrStream = func(db, ref)
         if(promiseOrStream && promiseOrStream.subscribe) {
           // handle subscription
-          return promiseOrStream
-            .subscribe(
-              (r) => {
-                let res
-                let action
-                if (Array.isArray(r)) {
-                  res = resultToJSON(r, options)
-                } else {
-                  res = {
-                    date: r.date,
-                    data: resultToJSON(r.data, options),
-                    matchType: r.matchType,
-                    operation: r.operation
-                  }
-                }
-                action = {
-                  type: SUCCESS,
-                  payload: res
-                }
-                next(action);
+          const callback = (r) => {
+            debugger
+            let res
+            let action
+            if (Array.isArray(r)) {
+              res = resultToJSON(r, options)
+            } else {
+              res = {
+                date: r.date,
+                data: resultToJSON(r.data, options),
+                matchType: r.matchType,
+                operation: r.operation
               }
-            )
+            }
+            action = {
+              type: SUCCESS,
+              payload: res
+            }
+            next(action);
+          }
+
+          const subscription = promiseOrStream.subscribe(callback)
+          dispatch({
+            type: `${SUCCESS}_SUBSCRIPTION`,
+            payload: subscription
+          })
+          return subscription
+
         } else {
           // handle promises
           return new Promise(function(resolve, reject) {
