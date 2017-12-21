@@ -19,7 +19,6 @@ const createBaqendMiddleware = (db) => {
       return middleware({ dispatch, getState, next, action, db, BAQEND })
     }
     if (BAQEND_DISPATCH && !BAQEND_DISPATCH.BAQEND) {
-      debugger
       return dispatch({
         type: BAQEND_DISPATCH.type,
         payload: resultToJSON(BAQEND_DISPATCH.payload, BAQEND_DISPATCH.options)
