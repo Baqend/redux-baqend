@@ -1,6 +1,6 @@
 import { BAQEND_CONNECTING, BAQEND_CONNECTED } from './types';
 import baqendConnect from './connect';
-import baqendMiddleware from './middleware';
+import baqendMiddleware from './createMiddleware';
 import baqendReducer from './reducer';
 import createStoreWithBaqend from './createStore'
 
