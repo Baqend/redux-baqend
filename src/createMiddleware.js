@@ -8,8 +8,9 @@ import {
 
 const createBaqendMiddleware = (db) => {
   return ({ dispatch, getState }) => next => action => {
-    const { BAQEND, BAQEND_DISPATCH } = action;
-    if (BAQEND) {
+    let { BAQEND, BAQEND_DISPATCH } = action;
+    if (BAQEND || (BAQEND_DISPATCH && BAQEND_DISPATCH.BAQEND)) {
+      BAQEND = BAQEND_DISPATCH && BAQEND_DISPATCH.BAQEND || BAQEND
       if (typeof BAQEND === 'function' || Array.isArray(BAQEND)) {
         return db.then((db) => {
           return thunk({ dispatch, getState, next, action, db, BAQEND })
@@ -17,7 +18,8 @@ const createBaqendMiddleware = (db) => {
       }
       return middleware({ dispatch, getState, next, action, db, BAQEND })
     }
-    if (BAQEND_DISPATCH) {
+    if (BAQEND_DISPATCH && !BAQEND_DISPATCH.BAQEND) {
+      debugger
       return dispatch({
         type: BAQEND_DISPATCH.type,
         payload: resultToJSON(BAQEND_DISPATCH.payload, BAQEND_DISPATCH.options)
