@@ -1,8 +1,6 @@
-import {
-  getReference
-} from './util'
+import { getReference } from '../util'
 
-const thunk = ({ dispatch, getState, next, action, db, BAQEND }) => {
+const handleActionThunk = ({ dispatch, getState, next, action, db }) => {
   // monkeypatch the redux dispatch function
   const baqendDispatch = (obj, options) => {
     return dispatch({
@@ -15,8 +13,8 @@ const thunk = ({ dispatch, getState, next, action, db, BAQEND }) => {
 
   let func
   let args = []
-  if (Array.isArray(BAQEND)) {
-    BAQEND.forEach((item) => {
+  if (Array.isArray(action)) {
+    action.forEach((item) => {
       if (typeof item === 'function') {
         func = item
       } else {
@@ -24,9 +22,8 @@ const thunk = ({ dispatch, getState, next, action, db, BAQEND }) => {
       }
     })
   } else {
-    func = BAQEND
+    func = action
   }
-
   return func({
     dispatch: baqendDispatch,
     getState,
@@ -34,4 +31,4 @@ const thunk = ({ dispatch, getState, next, action, db, BAQEND }) => {
   }, ...args)
 }
 
-export default thunk
+export default handleActionThunk
