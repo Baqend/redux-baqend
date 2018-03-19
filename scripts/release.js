@@ -21,7 +21,7 @@ var pkg = JSON.parse(fs.readFileSync('package.json', 'utf-8'));
 var pushNPM = !pkg.private;
 var requiredBranch = 'master';
 var requiredNPMUser = 'info@baqend.com';
-var gitAdd = 'dist doc';
+var gitAdd = 'lib';
 
 console.log('Check npm user.');
 var user = exec('npm config get email', {silent: true}).stdout.trim();
@@ -81,7 +81,7 @@ fs.writeSync(fd, changelog, 0, changelog.length); //append old data
 fs.close(fd);
 
 var buildResult =
-  exec('npm run dist').code ||
+  exec('npm run build').code ||
   exec('git add package.json CHANGELOG.md').code ||
   (gitAdd && exec('git add -f ' + gitAdd, {silent: true}).code) ||
   exec('git commit -m "release ' + version + ' [ci skip]"').code ||
@@ -100,10 +100,3 @@ exec('git push origin ' + version).code;
 
 if (pushNPM)
 exec('npm publish');
-
-console.log('Postrelease:');
-var devVersion = exec('npm version --no-git-tag-version prerelease').stdout.trim();
-(gitAdd && exec('git rm --cached -r ' + gitAdd, {silent: true}).code) ||
-exec('git add package.json').code ||
-exec('git commit -m "new development version ' + devVersion + ' [ci skip]"').code ||
-exec('git push origin ' + requiredBranch).code;
