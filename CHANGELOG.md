@@ -1,3 +1,11 @@
+<a name="v1.1.1"></a>
+# v1.1.1 (2018-3-19)
+
+
+### Features
+
+* update documentation
+
 <a name="v1.1.0"></a>
 # v1.1.0 (2018-3-19)
 
