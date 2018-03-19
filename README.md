@@ -73,7 +73,55 @@ case BAQEND_CONNECTED:
 ...
 ```
 
-### Basic usage
+### Usage
+
+## Action Thunk
+The Redux Baqend Middleware allows you to write action creators that return a function instead of an action as you know it from the [Redux Thunk Middleware](https://github.com/gaearon/redux-thunk), but come with a baqend connection instance, which can be used to make request against you Baqend app from within asynchronous redux actions. In addition to that the payload of actions dispatched by the baqend middleware are serialized, before they are put into the store. The serialization depth can be set by an optional options parameter, which can be passed to the dispatch function as a second argument.
+
+```js
+{
+  'BAQEND': async ({ dispatch, getState, db }) => {
+    const options = { depth: 0 }
+    const items = await db.Items.find().resultList()
+    dispatch({
+      type: ITEMS_LOAD,
+      payload: result,
+    }, options)
+    return items
+  }
+}
+```
+
+To convert the serialized baqend object back from JSON to a Baqend object you can either pass the jsons as arguments to the action array or do it manually by using the `fromJSON` method coming with the Javascript SDK.
+
+```js
+{
+  'BAQEND': [json, async ({ dispatch, getState, db }, item) => {
+    const updated = await item.update()
+    dispatch({
+      type: ITEM_UPDATE,
+      payload: updated
+    })
+    return updated
+  }]
+}
+
+// or
+
+{
+  'BAQEND': async ({ dispatch, getState, db }) => {
+    const item = db.Item.fromJSON(json)
+    const updated = await item.update()
+    dispatch({
+      type: ITEM_UPDATE,
+      payload: updated
+    })
+    return updated
+  }
+}
+```
+
+## Action Objects
 In React/Redux you should mostly work with serializable objects. Therefore you should convert the baqend objects to json before you pass them to your redux store and get and update your reference to the baqend object by using the `fromJSON` method coming with the js-sdk. You can either convert the objects manually or let the middleware do it automatically. Inside the payload methods of your actions you can work with baqend like you used to do.
 
 A minimal baqend action:
