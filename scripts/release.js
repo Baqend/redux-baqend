@@ -21,7 +21,7 @@ var pkg = JSON.parse(fs.readFileSync('package.json', 'utf-8'));
 var pushNPM = !pkg.private;
 var requiredBranch = 'master';
 var requiredNPMUser = 'info@baqend.com';
-var gitAdd = 'lib';
+var gitAdd = '';
 
 console.log('Check npm user.');
 var user = exec('npm config get email', {silent: true}).stdout.trim();
