@@ -1,3 +1,11 @@
+<a name="v1.1.3"></a>
+# v1.1.3 (2021-7-8)
+
+
+### Features
+
+* Update redux peer dep
+
 <a name="v1.1.2"></a>
 # v1.1.2 (2021-7-8)
 
