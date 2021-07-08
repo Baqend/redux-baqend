@@ -24,7 +24,7 @@
   "license": "MIT",
   "peerDependencies": {
     "baqend": "^3.0.0",
-    "redux": "^3.6.0"
+    "redux": "^4.0.0"
   },
   "devDependencies": {
     "babel": "^6.23.0",
