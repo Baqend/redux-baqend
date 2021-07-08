@@ -23,7 +23,7 @@
   "homepage": "http://baqend.com",
   "license": "MIT",
   "peerDependencies": {
-    "baqend": "^2.7.0",
+    "baqend": "^3.0.0",
     "redux": "^3.6.0"
   },
   "devDependencies": {
